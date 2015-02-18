@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/aburak/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
+        <dex dex="/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/support-v4-18.0.0-b6697e9f427e1b6fc2298cce1d471d4b0af74a77.jar" />
+    </item>
+    <item
+        jar="/home/aburak/AndroidstudioProjects/Rooster/app/libs/mpandroidchartlibrary-1-7-4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c685e45ac6491e51640ce3571606ac22dfd4a6a3">
+        <dex dex="/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/mpandroidchartlibrary-1-7-4-e168d1c7b3bdf7929e7ed2ee00d4ffaecce1aa3c.jar" />
+    </item>
+    <item
+        jar="/home/aburak/AndroidstudioProjects/Rooster/app/libs/androidplot-core-0.6.2-SNAPSHOT.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b4cff2ddf15b0c16cc4907b2f28ed7bc2637bc33">
+        <dex dex="/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/androidplot-core-0.6.2-SNAPSHOT-80ccd978a7387f426d079fdb073f487a8fd3ce30.jar" />
+    </item>
+
+</items>

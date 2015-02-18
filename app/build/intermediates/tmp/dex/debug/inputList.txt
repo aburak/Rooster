@@ -1,0 +1,4 @@
+/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/classes/debug
+/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/androidplot-core-0.6.2-SNAPSHOT-80ccd978a7387f426d079fdb073f487a8fd3ce30.jar
+/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/support-v4-18.0.0-b6697e9f427e1b6fc2298cce1d471d4b0af74a77.jar
+/home/aburak/AndroidstudioProjects/Rooster/app/build/intermediates/pre-dexed/debug/mpandroidchartlibrary-1-7-4-e168d1c7b3bdf7929e7ed2ee00d4ffaecce1aa3c.jar
