@@ -2,7 +2,7 @@
  * MainActivity - Main activity of Rooster.
  * Version: 3.2
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak ï¿½nal
  */
 package inno.rooster.core;
 
@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements
 	private int numOf30Minutes;
 	
 	public static AnalysisMaker analysisMaker_global;
+    public static BlueSmirfSPP blueSmirfSPP;
 	
 	// Tab titles
 	private String[] tabs = { "ALARM", "GRAPHICS", "BLUETOOTH"};
@@ -74,8 +75,10 @@ public class MainActivity extends FragmentActivity implements
 		actionBar = getActionBar();
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 		fileNameManager = new FileNameManager();
-//		mAdapter.getItem(index);
 		numOf30Minutes = 0;
+
+        // Initialize Bluetooth Module
+        blueSmirfSPP = new BlueSmirfSPP(this);
 		
 		ia_handler = new Handler();
 		numOfHR = 0;
@@ -146,6 +149,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 	
 	// To test periodic task execution
+    // Bluetooth communication will be done here!
 	private void test() {
 		
 		System.out.println("5 more seconds has passed");

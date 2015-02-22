@@ -12,4 +12,5 @@
     <string name="rem_percentage">Rem Percentage:</string>
     <string name="info">In the graph, Red regions show REM stages and green regions show non-REM stages.</string>
     <string name="hint">Please enter your age..</string>
+    <string name="connect_bluetooth">Connect</string>
 </resources>

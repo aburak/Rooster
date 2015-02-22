@@ -25,4 +25,22 @@
         android:layout_marginTop="30dp"
         android:text="Bluetooth" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="@string/connect_bluetooth"
+        android:id="@+id/connect_button"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/paired_device_spinner"
+        android:layout_above="@+id/connect_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:spinnerMode="dropdown" />
+
 </RelativeLayout><!-- From: file:/home/aburak/AndroidstudioProjects/Rooster/app/src/main/res/layout/bluetooth_tab.xml -->

@@ -2,7 +2,7 @@
  * FileNameManager - It holds all file names in order not to create confusion about file names used in other classes.
  * Version: 2.1
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak Unal
  */
 
 package inno.rooster.core;

@@ -2,7 +2,7 @@
  * AnalysisMaker - Both instance analysis and general analysis of sleep are made in this class.
  * Version: 3.2
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak Unal
  */
 package inno.rooster.core;
 

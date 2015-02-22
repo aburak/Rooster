@@ -2,7 +2,7 @@
  * AlarmFragment - Setting an alarm is done in this class. In order to set an alarm, Bluetooth should be opened in advance.
  * Version: 3.2
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak Unal
  */
 package inno.rooster.core;
 

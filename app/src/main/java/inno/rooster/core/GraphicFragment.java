@@ -2,7 +2,7 @@
  * GraphicFragment - Graphic of the last night sleep is shown in this tab.
  * Version: 3.2
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak Unal
  */
 package inno.rooster.core;
 

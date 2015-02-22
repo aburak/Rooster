@@ -2,7 +2,7 @@
  * Alarm - It is responsible for managing alarm.
  * Version: Deprecated
  * 
- * Author: Ali Burak Ünal
+ * Author: Ali Burak Unal
  */
 
 package inno.rooster.core;
