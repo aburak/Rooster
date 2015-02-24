@@ -78,7 +78,7 @@ public class MainActivity extends FragmentActivity implements
 		numOf30Minutes = 0;
 
         // Initialize Bluetooth Module
-        blueSmirfSPP = new BlueSmirfSPP(this);
+        blueSmirfSPP = new BlueSmirfSPP();
 		
 		ia_handler = new Handler();
 		numOfHR = 0;

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/disconnect_but">
 
     <TextView
         android:id="@+id/textView1"
@@ -23,16 +24,19 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="Bluetooth" />
+        android:text="Bluetooth"
+        android:checked="false" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:text="@string/connect_bluetooth"
         android:id="@+id/connect_button"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignStart="@+id/textView1"
+        android:layout_marginLeft="37dp"
+        android:layout_marginStart="37dp" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -42,5 +46,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:spinnerMode="dropdown" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/disconnect_bluetooth"
+        android:id="@+id/disconnect_button"
+        android:layout_alignBottom="@+id/connect_button"
+        android:layout_toRightOf="@+id/toggleButton1"
+        android:layout_toEndOf="@+id/toggleButton1" />
 
 </RelativeLayout><!-- From: file:/home/aburak/AndroidstudioProjects/Rooster/app/src/main/res/layout/bluetooth_tab.xml -->

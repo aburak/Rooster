@@ -86,10 +86,13 @@ public class BlueSmirfSPP
 
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(addr);
             mBluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
+//            mBluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
 
             // discovery is a heavyweight process so
             // disable while making a connection
             mBluetoothAdapter.cancelDiscovery();
+
+
 
             mBluetoothSocket.connect();
             mOutputStream = mBluetoothSocket.getOutputStream();

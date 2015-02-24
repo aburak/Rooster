@@ -7,20 +7,31 @@
 package inno.rooster.core;
 
 import info.androidhive.tabsswipe.R;
+
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Set;
 
-public class BluetoothFragment extends Fragment implements View.OnClickListener {
+public class BluetoothFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, Runnable {
 
 	//Variables
 	private View rootView;
@@ -30,11 +41,13 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener 
     private boolean isThreadRunning;
 
     private Spinner paired_devices;
+    private Handler handler;
+    private ArrayAdapter arrayAdapterDevices;
+    private Thread t;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.context = context;
         isThreadRunning = false;
         bluetoothAddress = null;
         blueSmirfSPP = new BlueSmirfSPP();
@@ -46,16 +59,56 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener 
 			Bundle savedInstanceState) {
 
 		rootView = inflater.inflate(R.layout.bluetooth_tab, container, false);
+        System.out.println("------------------------------BluetoothFragment - onCreateView");
 
         // Initialization
-
-
-
-		final ToggleButton tb = (ToggleButton) rootView.findViewById(R.id.toggleButton1);
+        final ToggleButton tb = (ToggleButton) rootView.findViewById(R.id.toggleButton1);
         final Button con_but = (Button) rootView.findViewById(R.id.connect_button);
+        final Button discon_but = (Button) rootView.findViewById(R.id.disconnect_button);
         paired_devices = (Spinner) rootView.findViewById(R.id.paired_device_spinner);
 
+        ArrayList<String> items = new ArrayList<String>();
+        arrayAdapterDevices    = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
+        handler                = new Handler();
         paired_devices.setOnItemSelectedListener(this);
+        arrayAdapterDevices.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        paired_devices.setAdapter(arrayAdapterDevices);
+
+
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> devices = adapter.getBondedDevices();
+        arrayAdapterDevices.clear();
+        bluetoothAddresses.clear();
+
+        if(devices.size() > 0)
+        {
+            System.out.println("The size of devices: " + devices.size());
+            for(BluetoothDevice device : devices)
+            {
+                arrayAdapterDevices.add(device.getName());
+                bluetoothAddresses.add(device.getAddress());
+            }
+
+            // request that the user selects a device
+            if(bluetoothAddress == null)
+            {
+                paired_devices.performClick();
+            }
+        }
+        else
+        {
+            System.out.println("Null devices");
+            bluetoothAddress = null;
+        }
+
+        // Adjust the status of button and toggle button according to the Bluetooth status
+        if(!adapter.isEnabled()) {
+            con_but.setEnabled(false);
+            tb.setChecked(false);
+        }
+
+        //Bluetooth Disconnect Button - to break the connection between the smartphone and the wristband
+        discon_but.setOnClickListener(this);
 
         //Bluetooth Connect Button - to establish connection between the smartphone and the wristband
         con_but.setOnClickListener(this);
@@ -66,7 +119,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener 
 				
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					
+
 					BluetoothAdapter blue_adap = BluetoothAdapter.getDefaultAdapter();
                     if(blue_adap == null) {
 
@@ -81,7 +134,6 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener 
                         con_but.setEnabled(true);
                         while( isBluetoothEnabled == blue_adap.isEnabled());
 					}
-					// How can I control if the alarm is set or not?
 					else if( !isChecked && isBluetoothEnabled) {
 						
 						System.out.println("Disable");
@@ -106,8 +158,57 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener 
 
         case R.id.connect_button:
             System.out.println("Connect is clicked on");
+            System.out.println("Bluetooth address: " + bluetoothAddress);
 
-//            MainActivity.blueSmirfSPP.connect();
+            if(!isThreadRunning) {
+
+                isThreadRunning = true;
+                t = new Thread(this);
+                t.start();
+            }
+            break;
+
+        case R.id.disconnect_button:
+            System.out.println("Disconnect is clicked on");
+            blueSmirfSPP.disconnect();
+            isThreadRunning = false;
+            break;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+        bluetoothAddress = bluetoothAddresses.get(pos);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+        bluetoothAddress = null;
+    }
+
+    public void run() {
+
+        Looper.prepare();
+        blueSmirfSPP.connect(bluetoothAddress);
+        if(blueSmirfSPP.isConnected()) {
+
+            System.out.println("Connected in run method");
+        }
+        else {
+
+            AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
+            ad.setCancelable(false);
+            ad.setTitle("Warning");
+            ad.setMessage("Bluetooth is not dconnected to the wristband!");
+            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            ad.show();
         }
     }
 }
