@@ -73,7 +73,7 @@ public class BlueSmirfSPP
             return false;
         }
 
-        if(mBluetoothAdapter.isEnabled() == false)
+        if(!mBluetoothAdapter.isEnabled())
         {
             Log.e(TAG, "connect: bluetooth disabled");
             return false;
@@ -185,6 +185,7 @@ public class BlueSmirfSPP
     {
         try
         {
+            System.out.println("b: " + b);
             mOutputStream.write(b);
         }
         catch (Exception e)
@@ -194,6 +195,7 @@ public class BlueSmirfSPP
             {
                 if(mIsConnected && (mIsError == false))
                 {
+                    System.out.println("Write byte error!");
                     Log.e(TAG, "writeByte: " + e);
                     mIsError = true;
                 }
@@ -231,7 +233,7 @@ public class BlueSmirfSPP
 
     public int readByte()
     {
-        int b = 0;
+        int b = -2;
         try
         {
             b = mInputStream.read();
@@ -311,5 +313,31 @@ public class BlueSmirfSPP
                 mLock.unlock();
             }
         }
+    }
+
+    public int getAvailableBytes() {
+
+        int b = -1;
+        try
+        {
+            b = mInputStream.available();
+        }
+        catch (Exception e)
+        {
+            mLock.lock();
+            try
+            {
+                if(mIsConnected && (mIsError == false))
+                {
+                    Log.e(TAG, "getAvailableBytes: " + e);
+                    mIsError = true;
+                }
+            }
+            finally
+            {
+                mLock.unlock();
+            }
+        }
+        return b;
     }
 }

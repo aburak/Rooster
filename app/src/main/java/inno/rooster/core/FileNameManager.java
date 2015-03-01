@@ -12,7 +12,8 @@ public class FileNameManager {
 	// File Names
 	private final String FILENAME_ANALYSIS = "rooster_analysis";
 	private final String FILENAME_REM_LAST_INDEX = "rooster_rem_last_index";
-	private String FILENAME_DATA = "rooster_data";
+	private final String FILENAME_DATA = "rooster_data";
+    private final String FILENAME_TEMP_DATA = "rooster_temp_data";
 	
 	public FileNameManager() {
 		
@@ -26,7 +27,7 @@ public class FileNameManager {
 		return FILENAME_REM_LAST_INDEX;
 	}
 
-	public String getData_file_name() {
-		return FILENAME_DATA;
-	}
+	public String getData_file_name() {	return FILENAME_DATA; }
+
+    public String getFILENAME_TEMP_DATA() { return FILENAME_TEMP_DATA; }
 }

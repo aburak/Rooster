@@ -87,40 +87,6 @@ public class AnalysisMaker {
 		
 		return age_of_person;
 	}
-    
-	// In order to get data from the wristband in every  30 seconds---------------------------------
-//	Runnable dataReaderHalfMinute = new Runnable() {
-//		
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			int range = 40;
-//			double temp_hr = random.nextDouble() * range + 55; // Here, the min value is assumed to be 55
-//			numOfHR++;
-//			if( numOfHR % 2 == 0) {
-//				
-//				boolean b = isThisMinuteREM(former, temp_hr);
-//				if( b) {
-//					
-//					Toast.makeText(context, "It is to time to wake up!", Toast.LENGTH_SHORT).show();
-//					stopRepeatingTask();
-//				}
-//			}
-//			else {
-//				
-//				former = temp_hr;
-//			}
-//		}
-//	};
-//
-//	void startRepeatingTask() {
-//		dataReaderHalfMinute.run(); 
-//	}
-//	
-//	void stopRepeatingTask() {
-//		handler.removeCallbacks(dataReaderHalfMinute);
-//	}
-	//--------------------------------------------------------------------------
 	
 	public void readDataAndCalculate() {
 		

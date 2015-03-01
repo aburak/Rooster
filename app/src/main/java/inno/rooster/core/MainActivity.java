@@ -53,7 +53,6 @@ public class MainActivity extends FragmentActivity implements
 	private int numOf30Minutes;
 	
 	public static AnalysisMaker analysisMaker_global;
-    public static BlueSmirfSPP blueSmirfSPP;
 	
 	// Tab titles
 	private String[] tabs = { "ALARM", "GRAPHICS", "BLUETOOTH"};
@@ -76,9 +75,6 @@ public class MainActivity extends FragmentActivity implements
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 		fileNameManager = new FileNameManager();
 		numOf30Minutes = 0;
-
-        // Initialize Bluetooth Module
-        blueSmirfSPP = new BlueSmirfSPP();
 		
 		ia_handler = new Handler();
 		numOfHR = 0;

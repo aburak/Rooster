@@ -73,13 +73,18 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
         		
         		alarm_hour = tp.getCurrentHour();
         		alarm_minute = tp.getCurrentMinute();
+
+                Singleton s = Singleton.getInstance();
+                s.setAlarmHour(alarm_hour);
+                s.setAlarmMinute(alarm_minute);
 	        	
 	        	Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
-	        	i.putExtra(AlarmClock.EXTRA_HOUR, tp.getCurrentHour());
-	        	i.putExtra(AlarmClock.EXTRA_MINUTES, tp.getCurrentMinute());
+	        	i.putExtra(AlarmClock.EXTRA_HOUR, alarm_hour);
+	        	i.putExtra(AlarmClock.EXTRA_MINUTES, alarm_minute);
 	        	startActivity(i);
 	        	
 	        	isAlarmSet = true;
+                s.setAlarmSet(isAlarmSet);
 	        	
 	            break;
         	}
