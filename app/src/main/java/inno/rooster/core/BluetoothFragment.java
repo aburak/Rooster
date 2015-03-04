@@ -13,6 +13,8 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +30,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,6 +56,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
     private ArrayAdapter arrayAdapterDevices;
     private Thread t;
     private boolean isConnected;
+    private Intent bluetoothIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,10 +81,12 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
         final Button discon_but = (Button) rootView.findViewById(R.id.disconnect_button);
         paired_devices = (Spinner) rootView.findViewById(R.id.paired_device_spinner);
 
+        // Fill the spinner
         ArrayList<String> items = new ArrayList<String>();
         arrayAdapterDevices    = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
         handler                = new Handler();
         paired_devices.setOnItemSelectedListener(this);
+
         arrayAdapterDevices.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paired_devices.setAdapter(arrayAdapterDevices);
 
@@ -92,6 +101,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
             System.out.println("The size of devices: " + devices.size());
             for(BluetoothDevice device : devices)
             {
+                System.out.println("atkafa: " + device.getName());
                 arrayAdapterDevices.add(device.getName());
                 bluetoothAddresses.add(device.getAddress());
             }
@@ -128,30 +138,31 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-					BluetoothAdapter blue_adap = BluetoothAdapter.getDefaultAdapter();
 
-                    if(blue_adap == null) {
-
-                        System.out.println("Null Bluetooth Adapter");
-                    }
+                    BluetoothAdapter blue_adap = BluetoothAdapter.getDefaultAdapter();
 					boolean isBluetoothEnabled = blue_adap.isEnabled();
 					
 					if( isChecked && !isBluetoothEnabled) {
 						
-						System.out.println("Enable");
-
-						blue_adap.enable();
+						System.out.println("Enable - Huseyin");
+                        blue_adap.enable();
                         con_but.setEnabled(true);
                         discon_but.setEnabled(true);
+                        //Set<BluetoothDevice> devices = blue_adap.getBondedDevices();
+//                        arrayAdapterDevices.clear();
+//                        bluetoothAddresses.clear();
                         Set<BluetoothDevice> devices = blue_adap.getBondedDevices();
-                        arrayAdapterDevices.clear();
-                        bluetoothAddresses.clear();
+
+
+                        System.out.println("Device size inside: " + devices.size());
+                        paired_devices.setAdapter(arrayAdapterDevices);
 
                         if(devices.size() > 0)
                         {
-                            System.out.println("The size of devices: " + devices.size());
+                            System.out.println("The size of devices - Huseyin: " + devices.size());
                             for(BluetoothDevice device : devices)
                             {
+                                System.out.println("atlıkarınca: " + device.getName());
                                 arrayAdapterDevices.add(device.getName());
                                 bluetoothAddresses.add(device.getAddress());
                             }
@@ -167,14 +178,17 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
                             System.out.println("Null devices");
                             bluetoothAddress = null;
                         }
+
                         while( isBluetoothEnabled == blue_adap.isEnabled());
 					}
 					else if( !isChecked && isBluetoothEnabled) {
 						
 						System.out.println("Disable");
-						blue_adap.disable();
+                        blue_adap.disable();
                         con_but.setEnabled(false);
                         discon_but.setEnabled(false);
+                        arrayAdapterDevices.clear();
+                        bluetoothAddresses.clear();
                         while( isBluetoothEnabled == blue_adap.isEnabled());
 					}
 				}
@@ -199,28 +213,34 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
             if(!isThreadRunning) {
 
                 System.out.println("connect-1");
-                isThreadRunning = true;
-                t = new Thread(this);
+//                isThreadRunning = true;
+//                t = new Thread(this);
                 System.out.println("connect-2");
-                t.start();
+//                t.start();
                 System.out.println("connect-3");
+//                BluetoothService bs = new BluetoothService();
+                bluetoothIntent = new Intent(getActivity(), BluetoothService.class);
+                bluetoothIntent.putExtra("Address", bluetoothAddress);
+                getActivity().startService(bluetoothIntent);
+                System.out.println("startService is called -- BluetoothFragment");
             }
             break;
 
         case R.id.disconnect_button:
             System.out.println("Disconnect is clicked on");
-            blueSmirfSPP.disconnect();
-            isThreadRunning = false;
-            if(!blueSmirfSPP.isConnected()) {
-
-                Toast.makeText(getActivity(),"Bluetooth is disconnected!",
-                        Toast.LENGTH_SHORT).show();
-            }
-            else {
-
-                Toast.makeText(getActivity(),"Bluetooth disconnection failure!",
-                        Toast.LENGTH_SHORT).show();
-            }
+//            blueSmirfSPP.disconnect();
+            getActivity().stopService(bluetoothIntent);
+//            isThreadRunning = false;
+//            if(!blueSmirfSPP.isConnected()) {
+//
+//                Toast.makeText(getActivity(),"Bluetooth is disconnected!",
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//            else {
+//
+//                Toast.makeText(getActivity(),"Bluetooth disconnection failure!",
+//                        Toast.LENGTH_SHORT).show();
+//            }
             break;
         }
     }
@@ -262,11 +282,16 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 
         // For the last 30 minutes of sleep
 
+        AnalysisMaker tmpAnalysisMaker = new AnalysisMaker(getActivity());
+        FileOutputStream fos = null;
+        try {
+            fos = getActivity().openFileOutput((new FileNameManager()).getTempData_file_name(), getActivity().MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         int counter = 0;
-        long difference = -1;
         boolean sent = false;
         boolean isTimeSet = false;
-        Date d;
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         int tmp = 0;
         byte b[] = new byte[8];
@@ -280,21 +305,26 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
             if(tmp >= 0) {
 
                 System.out.println("tmp: " + Character.getNumericValue(tmp));
+                try {
+                    fos.write((Character.getNumericValue(tmp) + "\n").getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
+            // Set the time of the alarm in order to find the difference
             if(s.isAlarmSet() && !isTimeSet) {
 
                 Calendar c = Calendar.getInstance();
                 c.set(Calendar.HOUR_OF_DAY, s.getAlarmHour());
                 c.set(Calendar.MINUTE, s.getAlarmMinute());
-                Calendar c2 = Calendar.getInstance();
-                System.out.print("c: " + c);
-                System.out.println("c2: " + c2);
-                System.out.println("Difference: " + (c.getTimeInMillis() - c2.getTimeInMillis()) / 60000);
                 isTimeSet = true;
             }
 
-            if(counter >= 13 && !sent) {
+            // The current time
+            Calendar c2 = Calendar.getInstance();
+
+            if( counter >= 12 /*(c2.getTimeInMillis() - c2.getTimeInMillis()) < 1800000  30 minutes */ && !sent) {
 
                 blueSmirfSPP.writeByte((int)'s'); // 115 -> s
                 System.out.println("s is sent!");
@@ -303,8 +333,22 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
                 try { Thread.sleep((long) (1000.0F/30.0F)); }
                 catch(InterruptedException e) { System.out.println("Error while sleeping the thread");}
             }
+
+
         }
 
+        try {
+            FileInputStream fis = getActivity().openFileInput((new FileNameManager()).getTempData_file_name());
+            int at = -1;
+            while((at = fis.read()) != -1) {
+
+                System.out.println("at: " + at + "--" + Character.getNumericValue(at));
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("Thread end!!!");
     }
 }

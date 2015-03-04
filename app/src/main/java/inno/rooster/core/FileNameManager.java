@@ -29,5 +29,5 @@ public class FileNameManager {
 
 	public String getData_file_name() {	return FILENAME_DATA; }
 
-    public String getFILENAME_TEMP_DATA() { return FILENAME_TEMP_DATA; }
+    public String getTempData_file_name() { return FILENAME_TEMP_DATA; }
 }

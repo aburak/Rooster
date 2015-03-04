@@ -28,6 +28,10 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name="inno.rooster.core.BluetoothService"
+            android:enabled="true" />
+
         <receiver
             android:name="info.androidhive.tabsswipe.Alarm"
             android:process=":remote" />

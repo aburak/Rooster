@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity implements
 	
 	private void prepareForInstantAnalysis() {
 		
-		analysisMaker_global.readDataAndCalculate();
+            analysisMaker_global.readDataAndCalculate();
 	}
 	//---------------------------------------------------------
 	

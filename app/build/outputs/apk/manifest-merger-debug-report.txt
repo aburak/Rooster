@@ -65,9 +65,15 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:27:17
 	android:name
 		ADDED from AndroidManifest.xml:27:27
-receiver#info.androidhive.tabsswipe.Alarm
+service#inno.rooster.core.BluetoothService
 ADDED from AndroidManifest.xml:30:9
-	android:process
-		ADDED from AndroidManifest.xml:30:20
+	android:enabled
+		ADDED from AndroidManifest.xml:30:18
 	android:name
-		ADDED from AndroidManifest.xml:30:46
+		ADDED from AndroidManifest.xml:30:41
+receiver#info.androidhive.tabsswipe.Alarm
+ADDED from AndroidManifest.xml:31:9
+	android:process
+		ADDED from AndroidManifest.xml:31:20
+	android:name
+		ADDED from AndroidManifest.xml:31:46

@@ -95,7 +95,7 @@ public class AnalysisMaker {
 //		handler = new Handler();
 		
 		// The data is read from the file - for demonstration
-   	 	readData("kiz_heart_rate_EV#-2.txt", "kiz_movement_EV#-6.txt"); // Real data
+   	 	readData("erkek_heart_rate_EV#-2.txt", "erkek_movement_EV#-6.txt"); // Real data
 //		readFromInternalMemory(); // Fake data
    	 	
         clone_hr_values = (ArrayList<Double>) hr_values.clone();
@@ -156,9 +156,11 @@ public class AnalysisMaker {
     	
     	// r_rem(age) value - indicates the limit of the REM stages
     	double RValue = calculateRValue(age);
+
     	int r_index = (int)Math.floor(RValue * Rk_values.size() / 100);
     	// delta_r_rem(age) value - indicates the standard deviation
     	double Std = calculateStd(age);
+
     	int delta_r = (int)Math.floor(Std * Rk_values.size() / 100);
     	
     	System.out.println( "AnalysisMaker - r_index: " + r_index + " - delta_r: " + delta_r);
