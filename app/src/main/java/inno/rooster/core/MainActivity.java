@@ -15,6 +15,8 @@ import java.util.Random;
 
 import info.androidhive.tabsswipe.R;
 import inno.rooster.tabsswipe.adapter.TabsPagerAdapter;
+import inno.rooster.viewadapter.NonSwipeableViewPager;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActionBar.Tab;
@@ -70,7 +72,12 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		
 		// Initilization
-		viewPager = (ViewPager) findViewById(R.id.pager);
+//		viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if(viewPager == null) {
+
+            System.out.println("Null viewpager in MainActivity");
+        }
 		actionBar = getActionBar();
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 		fileNameManager = new FileNameManager();
@@ -202,7 +209,7 @@ public class MainActivity extends FragmentActivity implements
 	Runnable mStatusChecker = new Runnable() {
 		@Override 
 		public void run() {
-			test(); //this function can change value of mInterval.
+//			test(); //this function can change value of mInterval.
 			numOf30Minutes++;
 			if( numOf30Minutes < 4) {
 				

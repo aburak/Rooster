@@ -6,10 +6,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewParent;
+
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
+
+import info.androidhive.tabsswipe.R;
+import inno.rooster.viewadapter.NonSwipeableViewPager;
 
 /**
  * 
@@ -88,7 +93,6 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 
 	public boolean onTouch(View view, MotionEvent motionEvent)
 	{
-
 		switch(motionEvent.getAction() & MotionEvent.ACTION_MASK)
 		{
 			case MotionEvent.ACTION_DOWN: //start gesture
@@ -107,7 +111,6 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 
 			case MotionEvent.ACTION_POINTER_UP: //end zoom
 				//should I count pointers and change mode after only one is left?
-
 				mode = ONE_FINGER_DRAG;
 
 				break;
@@ -145,7 +148,6 @@ public class MultitouchPlot extends XYPlot implements OnTouchListener
 				}
 				break;
 		}
-
 		return true;
 	}
 

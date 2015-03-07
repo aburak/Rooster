@@ -30,6 +30,7 @@ import android.provider.AlarmClock;
 import android.text.format.Time;
 import android.widget.TextView;
 import android.widget.Toast;
+import inno.rooster.core.Singleton;
 
 public class AnalysisMaker {
 
@@ -49,7 +50,6 @@ public class AnalysisMaker {
 	private final int LIMIT = 1000;
 	private final int SIZE_OF_BUNDLE = 9; //In terms of bytes including double + "," + double + "\n"
 	private final int averager = 20; //Averager is assigned 20. This can be changed and accuracy could be affected by this.
-	private Random random;
 	private int numOfHR;
 	private double former;
 	private Handler handler;
@@ -57,6 +57,7 @@ public class AnalysisMaker {
 	public AnalysisMaker( Context context) {
 		
 		this.context = context;
+        fileNameManager = new FileNameManager();
 	}
 	
 	public double getRem_percentage() {
@@ -89,10 +90,6 @@ public class AnalysisMaker {
 	}
 	
 	public void readDataAndCalculate() {
-		
-		fileNameManager = new FileNameManager();
-		random = new Random();
-//		handler = new Handler();
 		
 		// The data is read from the file - for demonstration
    	 	readData("erkek_heart_rate_EV#-2.txt", "erkek_movement_EV#-6.txt"); // Real data
@@ -284,8 +281,7 @@ public class AnalysisMaker {
                 quickSort(arr, indices, index, right);
     }
     //----------------------------------------------------------------------------------
-    
-    
+
     
     // Read heart rate and movement data from the specified file
     private void readData( String hr_file_name, String mv_file_name) {

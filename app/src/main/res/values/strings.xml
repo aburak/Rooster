@@ -14,4 +14,5 @@
     <string name="hint">Please enter your age..</string>
     <string name="connect_bluetooth">Connect</string>
     <string name="disconnect_bluetooth">Disconnect</string>
+    <string name="age_input">Age:</string>
 </resources>

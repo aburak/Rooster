@@ -96,13 +96,7 @@ public class GraphicFragment extends Fragment {
 
         plot = (MultitouchPlot) rootView.findViewById(R.id.mySimpleXYPlot);;
         System.out.println( "Plot is done");
-        
-        System.out.println( "CHECK");
-        
-//        // reduce the number of range labels
-//        plot.setTicksPerRangeLabel(3);
-//        plot.getGraphWidget().setDomainLabelOrientation(-45);
-        
+
         return rootView;
     }
     

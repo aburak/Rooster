@@ -4,9 +4,13 @@ package inno.rooster.core;
  * Created by aburak on 28.02.2015.
  */
 public class Singleton {
+
     private static Singleton instance = null;
 
 
+
+
+    private  int age = -1;
     private int alarmHour = -1;
     private int alarmMinute = -1;
     private boolean isAlarmSet = false;
@@ -20,6 +24,17 @@ public class Singleton {
 
         return instance;
     }
+
+    /////////////////////////////////////////////////////////////////////
+    // Age
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+    //////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////
     // Alarm Properties

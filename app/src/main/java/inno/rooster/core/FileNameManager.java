@@ -14,6 +14,7 @@ public class FileNameManager {
 	private final String FILENAME_REM_LAST_INDEX = "rooster_rem_last_index";
 	private final String FILENAME_DATA = "rooster_data";
     private final String FILENAME_TEMP_DATA = "rooster_temp_data";
+    private final String FILENAME_AGE = "rooster_age";
 	
 	public FileNameManager() {
 		
@@ -30,4 +31,6 @@ public class FileNameManager {
 	public String getData_file_name() {	return FILENAME_DATA; }
 
     public String getTempData_file_name() { return FILENAME_TEMP_DATA; }
+
+    public String getAge_file_name() { return FILENAME_AGE; }
 }

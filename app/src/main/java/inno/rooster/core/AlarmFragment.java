@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -55,16 +56,21 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
 		switch (v.getId()) {
         case R.id.Set:
         	System.out.println("Set is clicked on");
-        	BluetoothAdapter blue_adap = BluetoothAdapter.getDefaultAdapter(); 
+        	BluetoothAdapter blue_adap = BluetoothAdapter.getDefaultAdapter();
+            EditText age_input = (EditText)getActivity().findViewById(R.id.user_age);
 			
-        	if( !blue_adap.isEnabled()) {
+        	if( !blue_adap.isEnabled() || age_input.getText() != null) {
         		
         		String text = "To set the alarm, first open Bluetooth";
-        		Toast toast = Toast.makeText(rootView.getContext(), text, 5);
+        		Toast toast = Toast.makeText(rootView.getContext(), text, Toast.LENGTH_SHORT);
         		toast.show();
         	}
         	else {
-        		
+
+                Singleton s = Singleton.getInstance();
+                s.setAge(Integer.parseInt(age_input.getText().toString()));
+                System.out.println("Age: " + Integer.parseInt(age_input.getText().toString()));
+
         		TimePicker tp = (TimePicker) rootView.findViewById(R.id.timePicker1);
 	        	/*
 	        	Context context_set = this.getActivity().getApplicationContext();
@@ -74,7 +80,6 @@ public class AlarmFragment extends Fragment implements View.OnClickListener {
         		alarm_hour = tp.getCurrentHour();
         		alarm_minute = tp.getCurrentMinute();
 
-                Singleton s = Singleton.getInstance();
                 s.setAlarmHour(alarm_hour);
                 s.setAlarmMinute(alarm_minute);
 	        	

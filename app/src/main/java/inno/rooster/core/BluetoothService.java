@@ -219,24 +219,44 @@ public class BluetoothService extends Service {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
+
             int counter = 0;
             boolean sent = false;
             boolean isTimeSet = false;
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
             int tmp = 0;
-            byte b[] = new byte[8];
+            int value = 0;
             Singleton s = Singleton.getInstance();
+            boolean first = true;
 
             while(blueSmirfSPP.isConnected()) {
 
                 tmp = blueSmirfSPP.readByte();
-                counter++;
-                System.out.println("Counter: " + counter);
-                if(tmp >= 0) {
 
-                    System.out.println("tmp: " + Character.getNumericValue(tmp));
+                // neither h nor a
+                if(Character.toString((char)tmp) != "a" || Character.toString((char)tmp) != "h") {
+
                     try {
-                        fos.write((Character.getNumericValue(tmp) + "\n").getBytes());
+                        fos.write(tmp);
+                        first = false;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // h
+                else if(Character.toString((char)tmp) == "h" && !first) {
+
+                    try {
+                        fos.write(("\n").getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // a
+                else if(Character.toString((char)tmp) == "a") {
+
+                    try {
+                        fos.write((",").getBytes());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -254,17 +274,15 @@ public class BluetoothService extends Service {
                 // The current time
                 Calendar c2 = Calendar.getInstance();
 
-                if( counter >= 12 /*(c2.getTimeInMillis() - c2.getTimeInMillis()) < 1800000  30 minutes */ && !sent) {
+                if( (c2.getTimeInMillis() - c2.getTimeInMillis()) < 1800000  /*30 minutes */ && !sent) {
 
                     blueSmirfSPP.writeByte((int)'s'); // 115 -> s
                     System.out.println("s is sent!");
                     sent = true;
                     blueSmirfSPP.flush();
                     try { Thread.sleep((long) (1000.0F/30.0F)); }
-                    catch(InterruptedException e) { System.out.println("Error while sleeping the thread");}
+                    catch(InterruptedException e) { System.out.println("Error while sleeping the thread - in Service");}
                 }
-
-
             }
 
             try {
@@ -272,7 +290,14 @@ public class BluetoothService extends Service {
                 int at = -1;
                 while((at = fis.read()) != -1) {
 
-                    System.out.println("at: " + at + "--" + Character.getNumericValue(at));
+                    if(Character.getNumericValue(at) >= 0 && Character.getNumericValue(at) <= 9) {
+
+                        value = value * 10 + Character.getNumericValue(at);
+                    }
+                    else /*if(Character.toString((char)at) == "\n")*/ {
+                        System.out.println("Value: " + value);
+                        value = 0;
+                    }
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

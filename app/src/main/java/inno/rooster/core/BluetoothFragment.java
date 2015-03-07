@@ -42,29 +42,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-public class BluetoothFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener, Runnable {
+public class BluetoothFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
 	//Variables
 	private View rootView;
     private ArrayList<String> bluetoothAddresses;
     private String bluetoothAddress;
-    private BlueSmirfSPP blueSmirfSPP;
-    private boolean isThreadRunning;
 
-    private Spinner paired_devices;
     private Handler handler;
     private ArrayAdapter arrayAdapterDevices;
-    private Thread t;
-    private boolean isConnected;
     private Intent bluetoothIntent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isConnected = false;
-        isThreadRunning = false;
         bluetoothAddress = null;
-        blueSmirfSPP = new BlueSmirfSPP();
         bluetoothAddresses = new ArrayList<String>();
     }
 
@@ -79,7 +71,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
         final ToggleButton tb = (ToggleButton) rootView.findViewById(R.id.toggleButton1);
         final Button con_but = (Button) rootView.findViewById(R.id.connect_button);
         final Button discon_but = (Button) rootView.findViewById(R.id.disconnect_button);
-        paired_devices = (Spinner) rootView.findViewById(R.id.paired_device_spinner);
+        Spinner paired_devices = (Spinner) rootView.findViewById(R.id.paired_device_spinner);
 
         // Fill the spinner
         ArrayList<String> items = new ArrayList<String>();
@@ -98,23 +90,22 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 
         if(devices.size() > 0)
         {
-            System.out.println("The size of devices: " + devices.size());
+//            System.out.println("The size of devices: " + devices.size());
             for(BluetoothDevice device : devices)
             {
-                System.out.println("atkafa: " + device.getName());
+//                System.out.println("atkafa: " + device.getName());
                 arrayAdapterDevices.add(device.getName());
                 bluetoothAddresses.add(device.getAddress());
             }
 
             // request that the user selects a device
-            if(bluetoothAddress == null)
-            {
-                paired_devices.performClick();
-            }
+//            if(bluetoothAddress == null)
+//            {
+//                paired_devices.performClick();
+//            }
         }
         else
         {
-            System.out.println("Null devices");
             bluetoothAddress = null;
         }
 
@@ -148,34 +139,32 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
                         blue_adap.enable();
                         con_but.setEnabled(true);
                         discon_but.setEnabled(true);
-                        //Set<BluetoothDevice> devices = blue_adap.getBondedDevices();
-//                        arrayAdapterDevices.clear();
-//                        bluetoothAddresses.clear();
+
+                        while(!blue_adap.isEnabled()) {}
                         Set<BluetoothDevice> devices = blue_adap.getBondedDevices();
 
 
-                        System.out.println("Device size inside: " + devices.size());
-                        paired_devices.setAdapter(arrayAdapterDevices);
+//                        System.out.println("Device size inside: " + devices.size());
+//                        paired_devices.setAdapter(arrayAdapterDevices);
 
                         if(devices.size() > 0)
                         {
-                            System.out.println("The size of devices - Huseyin: " + devices.size());
+//                            System.out.println("The size of devices - Huseyin: " + devices.size());
                             for(BluetoothDevice device : devices)
                             {
-                                System.out.println("atlıkarınca: " + device.getName());
+//                                System.out.println("atlıkarınca: " + device.getName());
                                 arrayAdapterDevices.add(device.getName());
                                 bluetoothAddresses.add(device.getAddress());
                             }
 
                             // request that the user selects a device
-                            if(bluetoothAddress == null)
-                            {
-                                paired_devices.performClick();
-                            }
+//                            if(bluetoothAddress == null)
+//                            {
+//                                paired_devices.performClick();
+//                            }
                         }
                         else
                         {
-                            System.out.println("Null devices");
                             bluetoothAddress = null;
                         }
 
@@ -183,7 +172,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 					}
 					else if( !isChecked && isBluetoothEnabled) {
 						
-						System.out.println("Disable");
+						System.out.println("Disable - Hüseyin");
                         blue_adap.disable();
                         con_but.setEnabled(false);
                         discon_but.setEnabled(false);
@@ -210,37 +199,15 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
             System.out.println("Connect is clicked on");
             System.out.println("Bluetooth address: " + bluetoothAddress);
 
-            if(!isThreadRunning) {
-
-                System.out.println("connect-1");
-//                isThreadRunning = true;
-//                t = new Thread(this);
-                System.out.println("connect-2");
-//                t.start();
-                System.out.println("connect-3");
-//                BluetoothService bs = new BluetoothService();
-                bluetoothIntent = new Intent(getActivity(), BluetoothService.class);
-                bluetoothIntent.putExtra("Address", bluetoothAddress);
-                getActivity().startService(bluetoothIntent);
-                System.out.println("startService is called -- BluetoothFragment");
-            }
+            bluetoothIntent = new Intent(getActivity(), BluetoothService.class);
+            bluetoothIntent.putExtra("Address", bluetoothAddress);
+            getActivity().startService(bluetoothIntent);
+            System.out.println("startService is called -- BluetoothFragment");
             break;
 
         case R.id.disconnect_button:
             System.out.println("Disconnect is clicked on");
-//            blueSmirfSPP.disconnect();
             getActivity().stopService(bluetoothIntent);
-//            isThreadRunning = false;
-//            if(!blueSmirfSPP.isConnected()) {
-//
-//                Toast.makeText(getActivity(),"Bluetooth is disconnected!",
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//            else {
-//
-//                Toast.makeText(getActivity(),"Bluetooth disconnection failure!",
-//                        Toast.LENGTH_SHORT).show();
-//            }
             break;
         }
     }
@@ -257,98 +224,98 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
         bluetoothAddress = null;
     }
 
-    public void run() {
-
-        Looper.prepare();
-        blueSmirfSPP.connect(bluetoothAddress);
-        if(blueSmirfSPP.isConnected()) {
-
-            System.out.println("Connected in run method");
-        }
-        else {
-
-            AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
-            ad.setCancelable(false);
-            ad.setTitle("Warning");
-            ad.setMessage("Bluetooth is not connected to the wristband!");
-            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            ad.show();
-        }
-
-        // For the last 30 minutes of sleep
-
-        AnalysisMaker tmpAnalysisMaker = new AnalysisMaker(getActivity());
-        FileOutputStream fos = null;
-        try {
-            fos = getActivity().openFileOutput((new FileNameManager()).getTempData_file_name(), getActivity().MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        int counter = 0;
-        boolean sent = false;
-        boolean isTimeSet = false;
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        int tmp = 0;
-        byte b[] = new byte[8];
-        Singleton s = Singleton.getInstance();
-
-        while(blueSmirfSPP.isConnected()) {
-
-            tmp = blueSmirfSPP.readByte();
-            counter++;
-            System.out.println("Counter: " + counter);
-            if(tmp >= 0) {
-
-                System.out.println("tmp: " + Character.getNumericValue(tmp));
-                try {
-                    fos.write((Character.getNumericValue(tmp) + "\n").getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Set the time of the alarm in order to find the difference
-            if(s.isAlarmSet() && !isTimeSet) {
-
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, s.getAlarmHour());
-                c.set(Calendar.MINUTE, s.getAlarmMinute());
-                isTimeSet = true;
-            }
-
-            // The current time
-            Calendar c2 = Calendar.getInstance();
-
-            if( counter >= 12 /*(c2.getTimeInMillis() - c2.getTimeInMillis()) < 1800000  30 minutes */ && !sent) {
-
-                blueSmirfSPP.writeByte((int)'s'); // 115 -> s
-                System.out.println("s is sent!");
-                sent = true;
-                blueSmirfSPP.flush();
-                try { Thread.sleep((long) (1000.0F/30.0F)); }
-                catch(InterruptedException e) { System.out.println("Error while sleeping the thread");}
-            }
-
-
-        }
-
-        try {
-            FileInputStream fis = getActivity().openFileInput((new FileNameManager()).getTempData_file_name());
-            int at = -1;
-            while((at = fis.read()) != -1) {
-
-                System.out.println("at: " + at + "--" + Character.getNumericValue(at));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Thread end!!!");
-    }
+//    public void run() {
+//
+//        Looper.prepare();
+//        blueSmirfSPP.connect(bluetoothAddress);
+//        if(blueSmirfSPP.isConnected()) {
+//
+//            System.out.println("Connected in run method");
+//        }
+//        else {
+//
+//            AlertDialog ad = new AlertDialog.Builder(getActivity()).create();
+//            ad.setCancelable(false);
+//            ad.setTitle("Warning");
+//            ad.setMessage("Bluetooth is not connected to the wristband!");
+//            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+//
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
+//            ad.show();
+//        }
+//
+//        // For the last 30 minutes of sleep
+//
+//        AnalysisMaker tmpAnalysisMaker = new AnalysisMaker(getActivity());
+//        FileOutputStream fos = null;
+//        try {
+//            fos = getActivity().openFileOutput((new FileNameManager()).getTempData_file_name(), getActivity().MODE_PRIVATE);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        int counter = 0;
+//        boolean sent = false;
+//        boolean isTimeSet = false;
+//        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+//        int tmp = 0;
+//        byte b[] = new byte[8];
+//        Singleton s = Singleton.getInstance();
+//
+//        while(blueSmirfSPP.isConnected()) {
+//
+//            tmp = blueSmirfSPP.readByte();
+//            counter++;
+//            System.out.println("Counter: " + counter);
+//            if(tmp >= 0) {
+//
+//                System.out.println("tmp: " + Character.getNumericValue(tmp));
+//                try {
+//                    fos.write((Character.getNumericValue(tmp) + "\n").getBytes());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            // Set the time of the alarm in order to find the difference
+//            if(s.isAlarmSet() && !isTimeSet) {
+//
+//                Calendar c = Calendar.getInstance();
+//                c.set(Calendar.HOUR_OF_DAY, s.getAlarmHour());
+//                c.set(Calendar.MINUTE, s.getAlarmMinute());
+//                isTimeSet = true;
+//            }
+//
+//            // The current time
+//            Calendar c2 = Calendar.getInstance();
+//
+//            if( counter >= 12 /*(c2.getTimeInMillis() - c2.getTimeInMillis()) < 1800000  30 minutes */ && !sent) {
+//
+//                blueSmirfSPP.writeByte((int)'s'); // 115 -> s
+//                System.out.println("s is sent!");
+//                sent = true;
+//                blueSmirfSPP.flush();
+//                try { Thread.sleep((long) (1000.0F/30.0F)); }
+//                catch(InterruptedException e) { System.out.println("Error while sleeping the thread");}
+//            }
+//
+//
+//        }
+//
+//        try {
+//            FileInputStream fis = getActivity().openFileInput((new FileNameManager()).getTempData_file_name());
+//            int at = -1;
+//            while((at = fis.read()) != -1) {
+//
+//                System.out.println("at: " + at + "--" + Character.getNumericValue(at));
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println("Thread end!!!");
+//    }
 }
