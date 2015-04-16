@@ -22,24 +22,22 @@ public final class R {
         public static final int title_font_size=0x7f040008;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int rooster=0x7f020000;
     }
     public static final class id {
         public static final int Set=0x7f080001;
-        public static final int action_settings=0x7f08000f;
-        public static final int connect_button=0x7f080008;
-        public static final int disconnect_but=0x7f080005;
-        public static final int disconnect_button=0x7f080009;
-        public static final int info_about_graph=0x7f08000e;
-        public static final int layout_of_graph=0x7f08000b;
-        public static final int mySimpleXYPlot=0x7f08000c;
-        public static final int paired_device_spinner=0x7f08000a;
-        public static final int rem_percentage=0x7f08000d;
-        public static final int textView=0x7f080003;
-        public static final int textView1=0x7f080006;
+        public static final int action_settings=0x7f08000d;
+        public static final int connect_button=0x7f080006;
+        public static final int disconnect_but=0x7f080003;
+        public static final int disconnect_button=0x7f080007;
+        public static final int info_about_graph=0x7f08000c;
+        public static final int layout_of_graph=0x7f080009;
+        public static final int mySimpleXYPlot=0x7f08000a;
+        public static final int paired_device_spinner=0x7f080008;
+        public static final int rem_percentage=0x7f08000b;
+        public static final int textView1=0x7f080004;
         public static final int timePicker1=0x7f080002;
-        public static final int toggleButton1=0x7f080007;
-        public static final int user_age=0x7f080004;
+        public static final int toggleButton1=0x7f080005;
         public static final int viewpager=0x7f080000;
     }
     public static final class layout {

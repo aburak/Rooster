@@ -61,6 +61,17 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+        // If there is connection, break it
+        if(bluetoothIntent != null) {
+
+            getActivity().stopService(bluetoothIntent);
+        }
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
@@ -82,6 +93,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
         arrayAdapterDevices.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         paired_devices.setAdapter(arrayAdapterDevices);
 
+        bluetoothIntent = null;
 
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> devices = adapter.getBondedDevices();
@@ -90,19 +102,11 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 
         if(devices.size() > 0)
         {
-//            System.out.println("The size of devices: " + devices.size());
             for(BluetoothDevice device : devices)
             {
-//                System.out.println("atkafa: " + device.getName());
                 arrayAdapterDevices.add(device.getName());
                 bluetoothAddresses.add(device.getAddress());
             }
-
-            // request that the user selects a device
-//            if(bluetoothAddress == null)
-//            {
-//                paired_devices.performClick();
-//            }
         }
         else
         {
@@ -143,25 +147,13 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
                         while(!blue_adap.isEnabled()) {}
                         Set<BluetoothDevice> devices = blue_adap.getBondedDevices();
 
-
-//                        System.out.println("Device size inside: " + devices.size());
-//                        paired_devices.setAdapter(arrayAdapterDevices);
-
                         if(devices.size() > 0)
                         {
-//                            System.out.println("The size of devices - Huseyin: " + devices.size());
                             for(BluetoothDevice device : devices)
                             {
-//                                System.out.println("atlıkarınca: " + device.getName());
                                 arrayAdapterDevices.add(device.getName());
                                 bluetoothAddresses.add(device.getAddress());
                             }
-
-                            // request that the user selects a device
-//                            if(bluetoothAddress == null)
-//                            {
-//                                paired_devices.performClick();
-//                            }
                         }
                         else
                         {
@@ -173,6 +165,7 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
 					else if( !isChecked && isBluetoothEnabled) {
 						
 						System.out.println("Disable - Hüseyin");
+//                        Intent intent = Singleton.getInstance().getBlueIntent();
                         blue_adap.disable();
                         con_but.setEnabled(false);
                         discon_but.setEnabled(false);
@@ -199,15 +192,24 @@ public class BluetoothFragment extends Fragment implements View.OnClickListener,
             System.out.println("Connect is clicked on");
             System.out.println("Bluetooth address: " + bluetoothAddress);
 
-            bluetoothIntent = new Intent(getActivity(), BluetoothService.class);
+            Singleton kenan = Singleton.getInstance();
+
+//            bluetoothIntent = new Intent(getActivity(), BluetoothService.class);
+            kenan.setBlueIntent(new Intent(getActivity(), BluetoothService.class));
+            bluetoothIntent = kenan.getBlueIntent();
             bluetoothIntent.putExtra("Address", bluetoothAddress);
             getActivity().startService(bluetoothIntent);
+
             System.out.println("startService is called -- BluetoothFragment");
             break;
 
         case R.id.disconnect_button:
             System.out.println("Disconnect is clicked on");
-            getActivity().stopService(bluetoothIntent);
+            if( bluetoothIntent != null) {
+
+                getActivity().stopService(bluetoothIntent);
+                bluetoothIntent = null;
+            }
             break;
         }
     }

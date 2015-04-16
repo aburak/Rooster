@@ -1,5 +1,7 @@
 package inno.rooster.core;
 
+import android.content.Intent;
+
 /**
  * Created by aburak on 28.02.2015.
  */
@@ -10,10 +12,16 @@ public class Singleton {
 
 
 
+    private Intent blueIntent;
     private  int age = -1;
     private int alarmHour = -1;
     private int alarmMinute = -1;
     private boolean isAlarmSet = false;
+
+
+
+    private String hr_fileName = "kiz_heart_rate_EV#-2.txt";
+    private String mv_fileName = "kiz_movement_EV#-6.txt";
 
     private Singleton() { }
 
@@ -35,7 +43,14 @@ public class Singleton {
         this.age = age;
     }
     //////////////////////////////////////////////////////////////////////
+    // Bluetooth Intent
+    public Intent getBlueIntent() {
+        return blueIntent;
+    }
 
+    public void setBlueIntent(Intent blueIntent) {
+        this.blueIntent = blueIntent;
+    }
     /////////////////////////////////////////////////////////////////////
     // Alarm Properties
     public void setAlarmHour(int alarmHour) {
@@ -64,5 +79,21 @@ public class Singleton {
         this.isAlarmSet = isAlarmSet;
     }
     /////////////////////////////////////////////////////////////////////
+    // Heart Rate and Movement File Names
+    public String getHr_fileName() {
+        return hr_fileName;
+    }
 
+    public void setHr_fileName(String hr_fileName) {
+        this.hr_fileName = hr_fileName;
+    }
+
+    public String getMv_fileName() {
+        return mv_fileName;
+    }
+
+    public void setMv_fileName(String mv_fileName) {
+        this.mv_fileName = mv_fileName;
+    }
+    ///////////////////////////////////////////////////////////////////////////////
 }

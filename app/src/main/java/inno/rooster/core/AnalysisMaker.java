@@ -47,9 +47,9 @@ public class AnalysisMaker {
     int rem_last_index;
 	private Context context;
 	private FileNameManager fileNameManager;
-	private final int LIMIT = 1000;
+//	private final int LIMIT = 1000;
 	private final int SIZE_OF_BUNDLE = 9; //In terms of bytes including double + "," + double + "\n"
-	private final int averager = 20; //Averager is assigned 20. This can be changed and accuracy could be affected by this.
+	private final int averager = 1; //Averager is assigned 20. This can be changed and accuracy could be affected by this.
 	private int numOfHR;
 	private double former;
 	private Handler handler;
@@ -92,9 +92,10 @@ public class AnalysisMaker {
 	public void readDataAndCalculate() {
 		
 		// The data is read from the file - for demonstration
-   	 	readData("erkek_heart_rate_EV#-2.txt", "erkek_movement_EV#-6.txt"); // Real data
-//		readFromInternalMemory(); // Fake data
-   	 	
+//        readData("erkek_heart_rate_EV#-2.txt", "erkek_movement_EV#-6.txt");
+//   	 	readData("kiz_heart_rate_EV#-2.txt", "kiz_movement_EV#-6.txt"); // Real data
+		readFromInternalMemory((new FileNameManager()).getData_file_name()); // Fake data
+
         clone_hr_values = (ArrayList<Double>) hr_values.clone();
         
         System.out.println( "AnalysisMaker - in readDataAndCalculate - hr_values.size() = " + hr_values.size());
@@ -153,11 +154,11 @@ public class AnalysisMaker {
     	
     	// r_rem(age) value - indicates the limit of the REM stages
     	double RValue = calculateRValue(age);
-
+//        RValue = 13;
     	int r_index = (int)Math.floor(RValue * Rk_values.size() / 100);
     	// delta_r_rem(age) value - indicates the standard deviation
     	double Std = calculateStd(age);
-
+        Std = 1;
     	int delta_r = (int)Math.floor(Std * Rk_values.size() / 100);
     	
     	System.out.println( "AnalysisMaker - r_index: " + r_index + " - delta_r: " + delta_r);
@@ -169,7 +170,7 @@ public class AnalysisMaker {
     	
     	// Find rem_last which indicates the last element of REM
     	//for( int i = (int)(Math.floor(RValue - Std) * movement.size() / 100); i < (int)(Math.floor(RValue + Std) * movement.size() / 100); i++) {
-    	for( int i = r_index - delta_r; i < r_index + delta_r; i++) {
+    	for( int i = r_index - delta_r; i <= r_index + delta_r; i++) {
     		
     		if( movement.get(i) > max) {
     			
@@ -308,8 +309,7 @@ public class AnalysisMaker {
 	        		// Heart Rate
 					tmp = inp_stream.readLine();
 					if( tmp != null/* && i % 2 == 0*/) {
-						
-						hr_values.add( Double.parseDouble((tmp.split(","))[7]));
+						hr_values.add(Double.parseDouble((tmp.split(","))[7]));
 						//System.out.println(values.get(values.size() - 1));
 					}
 					//i++;
@@ -328,7 +328,7 @@ public class AnalysisMaker {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	        } while( tmp != null && atkafa < LIMIT);
+	        } while( tmp != null /*&& atkafa < LIMIT*/);
 	        System.out.println("AnalysisMaker - atkafa: " + atkafa);
 //	        hr_values = (ArrayList<Double>)hr_values.subList(40, hr_values.size());
 //	        mv_values = (ArrayList<Double>)mv_values.subList(40, mv_values.size());
@@ -340,11 +340,11 @@ public class AnalysisMaker {
 		}
     }
 
-    private void readFromInternalMemory() {
+    private void readFromInternalMemory(String fileName) {
     	
     	FileInputStream fis = null;
 		try {
-			fis = context.openFileInput(fileNameManager.getData_file_name());
+			fis = context.openFileInput(fileName);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -362,11 +362,8 @@ public class AnalysisMaker {
 		try {
 			
 			while( (temp_str = bufferedReader.readLine()) != null) {
-				
-				//System.out.println(temp_str);
+
 				temp_arr = temp_str.split(",");
-//				System.out.println("AnalysisMaker - temp_arr[0] = " + temp_arr[0]);
-//				System.out.println("AnalysisMaker - temp_arr[1] = " + temp_arr[1]);
 				hr_values.add(Double.parseDouble(temp_arr[0]));
 				mv_values.add(Double.parseDouble(temp_arr[1]));
 			}
@@ -392,7 +389,7 @@ public class AnalysisMaker {
     }
 
     // Return if the current minute is REM or non-REM
-    public boolean isThisMinuteREM( double hr_former, double hr_latter) {
+    public boolean isThisMinuteREM( double hr_former, double hr_latter, double mv_former, double mv_latter) {
     	
     	double temp_Rk = 0;
 //    	hr_values.add(hr_former);
@@ -406,8 +403,48 @@ public class AnalysisMaker {
     	temp_Rk = temp_Rk / averager;
     	
     	// Add the given heart rate values into the Heart Rate list
+        hr_values.add(hr_former);
+        hr_values.add(hr_latter);
+        mv_values.add(mv_former);
+        mv_values.add(mv_latter);
+
+        System.out.println("R(k) size: " + Rk_values.size() + " - rem_last_index: " + rem_last_index);
     	System.out.println("R(k): " + Rk_values.get(Rk_values.size() - rem_last_index) + "\n" + 
     			"temp_Rk:" + temp_Rk);
-    	return true;//(Rk_values.get(Rk_values.size() - rem_last_index) < temp_Rk);
+    	return (Rk_values.get(Rk_values.size() - rem_last_index) < temp_Rk);
+    }
+
+    public void instantAnalysisPreparation() {
+
+        FileNameManager fnm = new FileNameManager();
+
+        readFromInternalMemory(fnm.getTempData_file_name());
+
+        clone_hr_values = (ArrayList<Double>) hr_values.clone();
+
+        System.out.println( "AnalysisMaker - in instantAnalysisPreparation - hr_values.size() = " + hr_values.size());
+        System.out.println( "AnalysisMaker - in instantAnalysisPreparation - mv_values.size() = " + mv_values.size());
+
+        // Initialize index array
+        index_array = new ArrayList<Integer>();
+        for( int i = 0; i < (hr_values.size() / 2); i++) {
+
+            index_array.add(i);
+        }
+
+        System.out.println( "AnalysisMaker - Between middle and one step ahead from the middle");
+
+        if( hr_values.size() <= 0 || mv_values.size() <= 0) {
+
+            //Exception handling
+        }
+        else {
+
+            System.out.println( "AnalysisMaker - Size of index_array: " + index_array.size());
+            rem_last_index = findLastREMIndex(clone_hr_values, mv_values, age_of_person);
+        }
+
+        // Calculate the REM percentage and store the result in rem_percentage variable
+        calculateREMPercentage(rem_last_index, Rk_values.size());
     }
 }
